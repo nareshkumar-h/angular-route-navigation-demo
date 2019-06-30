@@ -1,27 +1,120 @@
-# RouteDemo
+## Routing 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.4.
+#### Prerequisite:
+* Create a Project with routing
 
-## Development server
+#### Step 1 : Create Components for Product
+```
+ng generate component list-product
+ng generate component view-product
+ng generate component delete-product
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+#### Step 2 : Add routes in app-routing.module.ts
+```
+const routes: Routes = [
+    { path: 'listproducts',      component: ListProductComponent },
+    { path: 'viewproduct/:id',      component: ViewProductComponent },      
+    { path: 'deleteproduct/:id',      component: DeleteProductComponent },
+    { path: '**', component: ListProductComponent }
+];
+```
 
-## Code scaffolding
+#### Step 3: Implement List Products
+* list-product.component.ts
+```
+export class ListProductComponent implements OnInit {
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+  constructor() { }
 
-## Build
+  products=[];
+  
+  ngOnInit() {
+    this.listProducts();
+  }
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+  listProducts(){
+    this.products =  [ {"id":1,"name":"MAC","price":1000},
+    {"id":2,"name":"Lenova","price":500}];    
+  }
+}
+```
 
-## Running unit tests
+* list-product.component.ts
+```
+<table border="1" *ngIf="products.length>0">
+    <thead><tr><th>Sno</th><th>Product Name</th><th>Price</th></tr></thead>
+    <tbody *ngFor="let p of products">
+        <tr><td>{{p.id}}</td><td>{{p.name}}</td><td>{{p.price}}</td>
+           <td><a routerLink="../viewproduct/{{p.id}}" class="btn btn-primary" >Edit</a></td> 
+            <td><a routerLink="../deleteproduct/{{p.id}}" class="btn btn-danger">Delete</a></td>
+           
+        </tr>
+   </tbody>
+</table>
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+#### Step 4: Implement View Product
+* view-product.component.ts
+ * Get Route Params (Get Product Id)
+```
+export class ViewProductComponent implements OnInit {
 
-## Running end-to-end tests
+  productId: number;
+  constructor(private router: Router, private route: ActivatedRoute) { 
+    this.route.params.subscribe( (params)=>{
+      this.productId = params['id'];
+     console.log('View Product:' + this.productId);
+    });
+  }
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+  ngOnInit() {
+  }
 
-## Further help
+  update(){
+    this.router.navigate(["listproducts"]);
+  }
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+}
+```
+* view-product.component.html
+```
+<h3> View Product</h3>
+
+Product Id : {{productId}}
+
+<br/>
+<button (click)="update()"> Update </button>
+```
+* Note: When we click update button, it should navigate to list products page.
+
+#### Step 5: Delete Component 
+* deleteproduct-component.ts
+```
+export class DeleteProductComponent implements OnInit {
+
+  productId:number;
+  constructor(private router: Router, private route: ActivatedRoute) { 
+    this.route.params.subscribe( (params)=>{
+      this.productId = params['id'];
+     console.log('Delete Product:' + this.productId);
+    });
+  }
+
+  ngOnInit() {
+  }
+
+  delete(){
+    this.router.navigate(["listproducts"]);
+  }
+```
+* deleteproduct-component.html
+```
+<h3> Delete Product</h3>
+
+Product Id : {{productId}}
+
+<button (click)="delete()"> Delete </button>
+```
+
+
