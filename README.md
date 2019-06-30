@@ -1,4 +1,4 @@
-## Routing 
+## Routing and Navigation
 
 #### Prerequisite:
 * Create a Project with routing
