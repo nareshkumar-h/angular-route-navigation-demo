@@ -1,0 +1,10 @@
+<table border="1" *ngIf="products.length>0">
+    <thead><tr><th>Sno</th><th>Product Name</th><th>Price</th></tr></thead>
+    <tbody *ngFor="let p of products">
+        <tr><td>{{p.id}}</td><td>{{p.name}}</td><td>{{p.price}}</td>
+           <td><a routerLink="../viewproduct/{{p.id}}" class="btn btn-primary" >Edit</a></td> 
+            <td><a routerLink="../deleteproduct/{{p.id}}" class="btn btn-danger">Delete</a></td>
+           
+        </tr>
+   </tbody>
+</table>
